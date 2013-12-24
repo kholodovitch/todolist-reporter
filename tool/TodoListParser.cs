@@ -11,10 +11,9 @@ namespace tool
 	{
 		private const int Level = 3;
 
+		private readonly Dictionary<string, TodoListTask> _days = new Dictionary<string, TodoListTask>();
 		private readonly Arguments _args;
-
-		private Dictionary<string, TodoListTask> _days = new Dictionary<string, TodoListTask>();
-		private LogParser _logParser;
+		private readonly LogParser _logParser;
 
 		public TodoListParser(Arguments args)
 		{
@@ -80,10 +79,10 @@ namespace tool
 			return dayTask;
 		}
 
-		public static LogItemInterval GetWorkdayInterval(IEnumerable<TaskWithChildIntervals> f)
+		private static LogItemInterval GetWorkdayInterval(List<TaskWithChildIntervals> allIntervals)
 		{
-			var start = new DateTime(f.Min(x => x.Intervals.Min(y => y.Value.Count() != 0 ? y.Value.Min(z => z.Start.Ticks) : long.MaxValue)));
-			var end = new DateTime(f.Max(x => x.Intervals.Max(y => y.Value.Count() != 0 ? y.Value.Max(z => z.End.Ticks) : long.MinValue)));
+			var start = new DateTime(allIntervals.Min(x => x.Intervals.Min(y => y.Value.Count() != 0 ? y.Value.Min(z => z.Start.Ticks) : long.MaxValue)));
+			var end = new DateTime(allIntervals.Max(x => x.Intervals.Max(y => y.Value.Count() != 0 ? y.Value.Max(z => z.End.Ticks) : long.MinValue)));
 			return new LogItemInterval { Start = start, End = end };
 		}
 
