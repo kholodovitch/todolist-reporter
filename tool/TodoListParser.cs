@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using nnDev.Components.Common;
 
@@ -10,7 +9,12 @@ namespace tool
 {
 	internal class TodoListParser
 	{
+		private const int Level = 3;
+
 		private readonly Arguments _args;
+
+		private Dictionary<string, TodoListTask> _days = new Dictionary<string, TodoListTask>();
+		private LogParser _logParser;
 
 		public TodoListParser(Arguments args)
 		{
@@ -18,7 +22,7 @@ namespace tool
 			_logParser = new LogParser(_args);
 		}
 
-		public List<TaskWithChildIntervals> Parse(int id)
+		public TimelineData Parse(int id)
 		{
 			var dayTask = GetDayTask(id);
 			var dayTasksWithChild = dayTask
@@ -39,20 +43,21 @@ namespace tool
 					})
 				.ToList();
 
-
-			return dayTasksWithChild
+			List<TaskWithChildIntervals> intervalses = dayTasksWithChild
 				.Select(x => new TaskWithChildIntervals
 					{
 						Task = x.Task,
 						Intervals = x.Childs.ToDictionary(f => f, t => _logParser.Parse(t.Id))
 					})
 				.ToList();
+			LogItemInterval workdayInterval = GetWorkdayInterval(intervalses);
+
+			return new TimelineData
+				{
+					Intervals = intervalses,
+					WorkdayInterval = workdayInterval,
+				};
 		}
-
-		private const int Level = 3;
-
-		private Dictionary<string, TodoListTask> _days = new Dictionary<string, TodoListTask>();
-		private LogParser _logParser;
 
 		internal TodoListTask GetDayTask(int id)
 		{
@@ -73,6 +78,13 @@ namespace tool
 				.First();
 			_days[dayKey] = dayTask;
 			return dayTask;
+		}
+
+		public static LogItemInterval GetWorkdayInterval(IEnumerable<TaskWithChildIntervals> f)
+		{
+			var start = new DateTime(f.Min(x => x.Intervals.Min(y => y.Value.Count() != 0 ? y.Value.Min(z => z.Start.Ticks) : long.MaxValue)));
+			var end = new DateTime(f.Max(x => x.Intervals.Max(y => y.Value.Count() != 0 ? y.Value.Max(z => z.End.Ticks) : long.MinValue)));
+			return new LogItemInterval { Start = start, End = end };
 		}
 
 		private static int DistanceToParent(XmlNode xmlNode, XmlNode node)

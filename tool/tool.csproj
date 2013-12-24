@@ -48,12 +48,17 @@
     <Compile Include="..\libraries\Extensions\LinqExtensions.cs">
       <Link>LinqExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\libraries\Extensions\XmlExtensions.cs">
+      <Link>XmlExtensions.cs</Link>
+    </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="LogItemInterval.cs" />
     <Compile Include="LogParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskWithChildIntervals.cs" />
+    <Compile Include="TimelineData.cs" />
+    <Compile Include="TimelineRenderer.cs" />
     <Compile Include="TodoListParser.cs" />
     <Compile Include="TodoListTask.cs" />
   </ItemGroup>
