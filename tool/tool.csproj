@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\libraries\CommandLineArguments.cs">
+      <Link>CommandLineArguments.cs</Link>
+    </Compile>
+    <Compile Include="Arguments.cs" />
+    <Compile Include="Interval.cs" />
+    <Compile Include="LogParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
