@@ -20,6 +20,9 @@ namespace tool
 		{
 			string logName = string.Format(_args.LogFilenamePattern, id);
 			string logPath = Path.Combine(_args.LogsDirectory, logName);
+			if (!File.Exists(logPath))
+				return new List<LogItemInterval>();
+
 			string[] lines = File.ReadAllLines(logPath);
 			if (lines.Length == 0)
 				throw new Exception("Empty log file");
