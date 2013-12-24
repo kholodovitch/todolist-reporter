@@ -17,7 +17,7 @@ namespace tool
 				return;
 
 			var logParser = new LogParser(parsedArgs);
-			List<Interval> f = logParser.Parse(parsedArgs.Id);
+			List<LogItemInterval> f = logParser.Parse(parsedArgs.Id);
 		}
 	}
 }
